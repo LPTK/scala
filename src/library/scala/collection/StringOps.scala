@@ -1309,6 +1309,21 @@ final class StringOps(private val s: String) extends AnyVal {
     (res1.toString, res2.toString)
   }
 
+  /** A pair of, first, all chars mapped by `f` to a `Left` and, second, all chars mapped by `f` to a `Right`. */
+  def partitionMap(f: Char => Either[Char,Char]): (String, String) = {
+    val res1, res2 = new JStringBuilder
+    var i = 0
+    val len = s.length
+    while(i < len) {
+      f(s.charAt(i)) match {
+        case Left(c) => res1.append(c)
+        case Right(c) => res2.append(c)
+      }
+      i += 1
+    }
+    (res1.toString, res2.toString)
+  }
+
   /** Analogous to `zip` except that the elements in each collection are not consumed until a strict operation is
     * invoked on the returned `LazyZip2` decorator.
     *
