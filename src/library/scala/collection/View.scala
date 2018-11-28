@@ -188,7 +188,7 @@ object View extends IterableFactory[View] {
 
   /** A class that splits an underlying collection into two views */
   @SerialVersionUID(3L)
-  class PartitionWith[A, A1, A2](val underlying: SomeIterableOps[A], val f: A => Either[A1, A2]) extends Serializable {
+  class PartitionMap[A, A1, A2](val underlying: SomeIterableOps[A], val f: A => Either[A1, A2]) extends Serializable {
 
     /** The view consisting of all elements of the underlying collection
       *  that map to `Left`.
@@ -204,9 +204,9 @@ object View extends IterableFactory[View] {
   }
 
   @SerialVersionUID(3L)
-  class LeftPartitionedWith[A, A1, A2](partitionWith: PartitionWith[A, A1, A2], f: A => Either[A1, A2]) extends AbstractView[A1] {
+  class LeftPartitionedWith[A, A1, A2](partitionMap: PartitionMap[A, A1, A2], f: A => Either[A1, A2]) extends AbstractView[A1] {
     def iterator = new AbstractIterator[A1] {
-      private[this] val self = partitionWith.underlying.iterator
+      private[this] val self = partitionMap.underlying.iterator
       private[this] var hd: A1 = _
       private[this] var hdDefined: Boolean = false
       def hasNext = hdDefined || {
@@ -228,9 +228,9 @@ object View extends IterableFactory[View] {
   }
 
   @SerialVersionUID(3L)
-  class RightPartitionedWith[A, A1, A2](partitionWith: PartitionWith[A, A1, A2], f: A => Either[A1, A2]) extends AbstractView[A2] {
+  class RightPartitionedWith[A, A1, A2](partitionMap: PartitionMap[A, A1, A2], f: A => Either[A1, A2]) extends AbstractView[A2] {
       def iterator = new AbstractIterator[A2] {
-        private[this] val self = partitionWith.underlying.iterator
+        private[this] val self = partitionMap.underlying.iterator
         private[this] var hd: A2 = _
         private[this] var hdDefined: Boolean = false
         def hasNext = hdDefined || {
