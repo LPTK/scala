@@ -407,6 +407,21 @@ final class ArrayOps[A](val xs: Array[A]) extends AnyVal {
     (res1.result(), res2.result())
   }
 
+  /** A pair of, first, all elements mapped by `f` to a `Left` and, second, all elements mapped by `f` to a `Right`. */
+  def partitionMap[A1: ClassTag, A2: ClassTag](f: A => Either[A1, A2]): (Array[A1], Array[A2]) = {
+    val res1 = ArrayBuilder.make[A1]
+    val res2 = ArrayBuilder.make[A2]
+    var i = 0
+    while(i < xs.length) {
+      f(xs(i)) match {
+        case Left(x) => res1 += x
+        case Right(x) => res2 += x
+      }
+      i += 1
+    }
+    (res1.result(), res2.result())
+  }
+
   /** Returns a new array with the elements in reversed order. */
   @inline def reverse: Array[A] = {
     val len = xs.length
