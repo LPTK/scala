@@ -16,7 +16,7 @@ package collection
 import scala.language.{higherKinds, implicitConversions}
 import scala.annotation.unchecked.uncheckedVariance
 import scala.collection.mutable.Builder
-import scala.collection.View.{LeftPartitionedWith, RightPartitionedWith}
+import scala.collection.View.{LeftPartitionMapped, RightPartitionMapped}
 import scala.collection.generic.DefaultSerializationProxy
 
 /** Base trait for generic collections.
@@ -690,8 +690,8 @@ trait IterableOps[+A, +CC[_], +C] extends Any with IterableOnce[A] with Iterable
     *              and the second one made of those wrapped in [[scala.util.Right]].
     */
   def partitionMap[A1, A2](f: A => Either[A1, A2]): (CC[A1], CC[A2]) = {
-    val left: View[A1] = new LeftPartitionedWith(this, f)
-    val right: View[A2] = new RightPartitionedWith(this, f)
+    val left: View[A1] = new LeftPartitionMapped(this, f)
+    val right: View[A2] = new RightPartitionMapped(this, f)
     (iterableFactory.from(left), iterableFactory.from(right))
   }
 
